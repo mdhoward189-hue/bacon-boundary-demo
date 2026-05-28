@@ -606,16 +606,24 @@ def page_analyze():
 
     st.markdown("<div style='height:1.5rem;'></div>", unsafe_allow_html=True)
 
-    default_text = ""
+    # Initialize custom text in session state if not present
+    if "custom_text" not in st.session_state:
+        st.session_state["custom_text"] = ""
+
+    # If an example was selected, override custom text
     if example_selected:
-        default_text = example_selected
+        st.session_state["custom_text"] = example_selected
 
     proposal = st.text_area(
         "Describe an AI system or proposal:",
-        value=default_text,
+        value=st.session_state["custom_text"],
         height=140,
         placeholder="Example: An AI system that autonomously screens job applications, ranks candidates by predicted performance, and sends rejection emails to applicants below the threshold...",
+        key="proposal_input",
     )
+
+    # Keep session state in sync with what the user typed
+    st.session_state["custom_text"] = proposal
 
     col_a, col_b, col_c = st.columns([2, 1, 2])
     with col_b:
